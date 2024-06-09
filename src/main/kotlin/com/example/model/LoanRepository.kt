@@ -6,7 +6,7 @@ object LoanRepository {
     private var loans = mutableListOf<Loan>()
 
     fun findAll(): List<Loan> {
-        return loans
+        return loans.filter { loan -> !loan.returned }
     }
 
     fun create(book: Book, user: User): Loan {

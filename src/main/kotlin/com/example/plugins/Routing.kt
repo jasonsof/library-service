@@ -41,7 +41,17 @@ fun Application.configureRouting() {
             }
         }
 
-        route("loans") {}
+        route("/loans") {
+            get {
+                val allLoans: List<Loan> = LoanRepository.findAll()
+                call.respond(allLoans)
+            }
+
+            get("/count") {
+                val count: Int = LoanRepository.findAll().size
+                call.respond(count)
+            }
+        }
     }
 }
 
