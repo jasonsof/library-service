@@ -2,6 +2,10 @@ package com.example.model
 
 import kotlinx.serialization.Serializable
 
+enum class FilterableProperties {
+    Title, Author, ISBN
+}
+
 @Serializable
 data class Book (
     val id: Int,

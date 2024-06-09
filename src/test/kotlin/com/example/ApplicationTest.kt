@@ -19,6 +19,23 @@ class ApplicationTest {
         assertEquals("Piranesi", result[1])
         assertEquals("Saga of the swamp thing", result[2])
         assertEquals("Choose Your Own Apocalypse With Kim Jong-un & Friends", result[3])
+        assertEquals("Jonathan Strange and Mr Norrel", result[4])
+    }
+
+    @Test
+    fun fetchBooksByProperty() = testApplication {
+        val jsonDoc = client.getAsJsonPath("/books?property=author&query=Susanna%20Clarke")
+
+        val result: List<String> = jsonDoc.read("$[*].title")
+        assertEquals("Piranesi", result[0])
+        assertEquals("Jonathan Strange and Mr Norrel", result[1])
+    }
+
+    @Test
+    fun fetchBooksByPropertyWithAnInvalidQueryProperty() = testApplication {
+        val response = client.get("/books?property=publisher&query=Susanna%20Clarke")
+
+        assertEquals(HttpStatusCode.BadRequest, response.status)
     }
 
     suspend fun HttpClient.getAsJsonPath(url: String): DocumentContext {
