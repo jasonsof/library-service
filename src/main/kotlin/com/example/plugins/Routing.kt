@@ -1,10 +1,10 @@
 package com.example.plugins
 
+import UserRepository
 import com.example.model.BookRepository
-import com.example.model.FilterableProperties
+import com.example.model.*
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.http.content.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
@@ -27,7 +27,21 @@ fun Application.configureRouting() {
                     call.respond(HttpStatusCode.BadRequest, e.message ?: "Invalid request :(")
                 }
             }
+
+            post("/{bookId}/loans") {
+                val bookId: Int = call.parameters["bookId"]?.toInt() ?: return@post call.respond(HttpStatusCode.BadRequest)
+
+                try {
+                    val book: Book = BookRepository.findById(bookId)
+                    val loan = LoanRepository.create(book, currentUser())
+                    call.respond(HttpStatusCode.Created, loan)
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.NotFound, e.message ?: "Book not found :(")
+                }
+            }
         }
+
+        route("loans") {}
     }
 }
 
@@ -39,4 +53,9 @@ private fun getQueryProperties(call: ApplicationCall): Pair<String, String>? {
     } else {
         Pair(queryParameters["property"] ?: "", queryParameters["query"]?.decodeURLQueryComponent() ?: "")
     }
+}
+
+// this would return the logged in user in reality
+private fun currentUser(): User {
+    return UserRepository.users.first()
 }

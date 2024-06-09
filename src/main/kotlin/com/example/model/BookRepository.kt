@@ -26,4 +26,8 @@ object BookRepository {
         }
         return filteredBooks
     }
+
+    fun findById(id: Int): Book {
+        return books.find { it.id == id } ?: throw Exception("Book not found")
+    }
 }

@@ -1,5 +1,6 @@
 package com.example
 
+import com.example.model.BookRepository
 import com.jayway.jsonpath.DocumentContext
 import com.jayway.jsonpath.JsonPath
 import io.ktor.client.*
@@ -36,6 +37,14 @@ class ApplicationTest {
         val response = client.get("/books?property=publisher&query=Susanna%20Clarke")
 
         assertEquals(HttpStatusCode.BadRequest, response.status)
+    }
+
+    @Test
+    fun createLoan() = testApplication {
+        val book = BookRepository.findById(1)
+
+        val response = client.post("/books/${book.id}/loans")
+        assertEquals(HttpStatusCode.Created, response.status)
     }
 
     suspend fun HttpClient.getAsJsonPath(url: String): DocumentContext {
