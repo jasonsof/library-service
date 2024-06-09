@@ -36,7 +36,7 @@ fun Application.configureRouting() {
                     val loan = LoanRepository.create(book, currentUser())
                     call.respond(HttpStatusCode.Created, loan)
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.NotFound, e.message ?: "Book not found :(")
+                    call.respond(HttpStatusCode.NotFound, e.message ?: "Book could not be loaned :(")
                 }
             }
         }
